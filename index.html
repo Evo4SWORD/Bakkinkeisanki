@@ -60,7 +60,7 @@
   <!-- 重犯罪 -->
   <fieldset>
     <legend>重犯罪</legend>
-    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪（100万・30分）</label><br>
+    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両・窃盗車（スーパーカー）（100万・30分）</label><br>
     <label><input type="checkbox" id="aggravatedRobberyAttempt"> 準重強盗未遂（50万・なし）</label><br>
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（100万・なし）</label><br>
@@ -70,7 +70,7 @@
     <label><input type="checkbox" id="kidnap"> 誘拐・拉致・監禁罪※人質含む（10万・10分）</label><br>
     <label><input type="checkbox" id="npcMurder"> NPC殺人罪（10万・10分）</label><br>
     <label><input type="checkbox" id="attemptedMurder"> 殺人未遂（30万・20分）</label><br>
-    <label><input type="checkbox" id="playerMurder"> プレイヤー殺人（50万・30分）</label><br>
+    <label><input type="checkbox" id="playerMurder"> プレイヤー殺人罪（50万・30分）</label><br>
     <label><input type="checkbox" id="prisonEscape"> 脱獄罪（100万・60分）</label><br>
     <label><input type="checkbox" id="aidingEscape"> 逃走補助罪（200万・60分）</label><br>
     <label><input type="checkbox" id="facilityAttack"> 公共施設襲撃罪（800万・60分）</label><br>
@@ -351,7 +351,7 @@ function calculateFine() {
     { id: "kidnap", fine: 100000, time: 10, label: "誘拐・拉致・監禁罪" },
     { id: "npcMurder", fine: 100000, time: 10, label: "NPC殺人罪" },
     { id: "attemptedMurder", fine: 300000, time: 20, label: "殺人未遂" },
-    { id: "playerMurder", fine: 500000, time: 30, label: "プレイヤー殺人" },
+    { id: "playerMurder", fine: 500000, time: 30, label: "プレイヤー殺人罪" },
     { id: "prisonEscape", fine: 1000000, time: 60, label: "脱獄罪" },
     { id: "aidingEscape", fine: 2000000, time: 60, label: "逃走補助罪" },
     { id: "facilityAttack", fine: 8000000, time: 60, label: "公共施設襲撃罪" },
