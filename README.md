@@ -47,7 +47,7 @@
     <label><input type="checkbox" id="theft"> 軽窃盗罪（30万・10分）</label><br>
     <label><input type="checkbox" id="pettyRobberyAttempt"> 軽強盗未遂（15万・なし）</label><br>
     <label><input type="checkbox" id="pettyRobbery"> 軽強盗罪（30万・なし）</label><br>
-    <label><input type="checkbox" id="fraud"> 詐欺罪用（5～50万・10分）</label><br>
+    <label><input type="checkbox" id="fraud"> 詐欺罪（5～50万・10分）</label><br>
     <div id="fraudCountContainer" class="input-box" style="display: none;">
       詐欺罰金額※5～50万まで:
       <input type="number" id="fraudCount" value="5" min="5" max="50" step="1">
@@ -77,8 +77,8 @@
     <label><input type="checkbox" id="eventTerrorism"> イベントテロ罪（1億・60分）</label><br>
     <label><input type="checkbox" id="sexualHarassment"> セクハラ罪※セクハラされた場合チケット発行→クリップ提出→対応（1000万・60分）</label><br>
     <label><input type="checkbox" id="bribery"> 収賄罪※公務員のみ適応（3億・60分）</label><br>
-    <label><input type="checkbox" id="businessObstruction"> 業務妨害罪※市民からの通報（ボディカメ必須）（500万・60分）</label><br>
-    <label><input type="checkbox" id="extortion"> 恐喝※過度な暴言など受けた場合（ボディカメ必須）（1000万・60分）</label><br>
+    <label><input type="checkbox" id="businessObstruction"> 業務妨害罪※市民からの通報（ボディカメ必須）（500万・60分）
+    </label><br>
   </fieldset>
 
   <!-- 薬 -->
@@ -92,7 +92,7 @@
       <label><input type="checkbox" id="illegalDrugUnit" onchange="toggleInput('drugCount')"> 違法薬物所持（1個 2万・固定20分）※100個まで</label>
       <input type="number" id="drugCount" value="0" min="0" style="display:none;" max="100">
     </div>
-    <label><input type="checkbox" id="illegalDrugFlat"> 違法薬物所持（20万・20分）</label><br>
+    <label><input type="checkbox" id="illegalDrugFlat"> 違法薬物販売（20万・20分）</label><br>
   </fieldset>
 
   <button onclick="calculateFine()">計算する</button>
@@ -183,7 +183,7 @@ function updateBailAvailability() {
     "armedRobberyAttempt", "armedRobbery", "firstDegreeRobberyAttempt", "firstDegreeRobbery",
     "kidnap", "npcMurder", "attemptedMurder", "playerMurder",
     "prisonEscape", "aidingEscape", "facilityAttack", "eventTerrorism",
-    "sexualHarassment", "bribery", "businessObstruction", "extortion"
+    "sexualHarassment", "bribery", "businessObstruction"
   ];
 
   // その中のどれかがチェックされているか
@@ -359,7 +359,6 @@ function calculateFine() {
     { id: "sexualHarassment", fine: 10000000, time: 60, label: "セクハラ罪" },
     { id: "bribery", fine: 300000000, time: 60, label: "収賄罪" },
     { id: "businessObstruction", fine: 5000000, time: 60, label: "業務妨害罪" },
-    { id: "extortion", fine: 10000000, time: 60, label: "恐喝" },
   ];
   heavyCrimes.forEach(crime => {
     if (document.getElementById(crime.id).checked) {
@@ -385,7 +384,7 @@ function calculateFine() {
   if (document.getElementById("illegalDrugFlat").checked) {
     fine += 200000;
     if (isManual) time += 20;
-    selectedCharges.push("違法薬物所持（定額）");
+    selectedCharges.push("違法薬物販売");
   }
 
   // 保釈金オプション
