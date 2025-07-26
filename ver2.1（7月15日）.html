@@ -1,7 +1,8 @@
 <!--追加・変更項目
-・セクハラ罪3000万から1億円に変更　☑
-・詐欺罪5～50万が50～100万に変更　□
-・軽犯罪に違法薬物採取追加　□　-->
+・セクハラ罪1億円から1000万円に変更　☑
+・詐欺罪50～100万が5～50万に変更　□
+・家、ATM強盗から銃刀法違反削除 □
+・タイトルの左に「※プレイヤー殺人罪は大型からチェック済み」と追加-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -15,11 +16,31 @@
     .item-row { margin-bottom: 5px; }
     .item-row input[type="number"] { width: 60px; margin-left: 10px; }
     fieldset { margin-top: 20px; padding: 10px; border: 1px solid #aaa; }
+    .title-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title-container h1 {
+      margin: 0;
+    }
+    .title-note {
+      color: red;
+      font-size: 1rem; /* タイトルとほぼ同じサイズ */
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-<h1>罰金計算機</h1>
+<div class="title-container">
+  <h1>罰金計算機</h1>
+  <span class="title-note">※プレイヤー殺人罪は大型からチェック済み</span>
+</div>
+
+</body>
+</html>
+
 
 <!-- 犯罪選択ボタン -->
 <button onclick="selectCrime('家強盗', this)">家強盗</button>
@@ -51,9 +72,9 @@
     <label><input type="checkbox" id="theft"> 軽窃盗罪（30万・10分）</label><br>
     <label><input type="checkbox" id="pettyRobberyAttempt"> 軽強盗未遂（15万・なし）</label><br>
     <label><input type="checkbox" id="pettyRobbery"> 軽強盗罪（30万・なし）</label><br>
-    <label><input type="checkbox" id="fraud"> 詐欺罪（50～100万・10分）</label><br>
+    <label><input type="checkbox" id="fraud"> 詐欺罪（5～50万・10分）</label><br>
     <div id="fraudCountContainer" class="input-box" style="display: none;">
-      詐欺罰金額※50～100万まで:
+      詐欺罰金額※5～50万まで:
       <input type="number" id="fraudCount" value="50" min="50" max="100" step="1">
     </div>
     <label><input type="checkbox" id="obstructionOfficialDuties"> 公務執行妨害※逃亡・職務質問放棄含む（10万・10分）</label><br>
@@ -79,7 +100,7 @@
     <label><input type="checkbox" id="aidingEscape"> 逃走補助罪（200万・60分）</label><br>
     <label><input type="checkbox" id="facilityAttack"> 公共施設襲撃罪（800万・60分）</label><br>
     <label><input type="checkbox" id="eventTerrorism"> イベントテロ罪（1億・60分）</label><br>
-    <label><input type="checkbox" id="sexualHarassment"> セクハラ罪※セクハラされた場合チケット発行→クリップ提出→対応（1億円・60分）</label><br>
+    <label><input type="checkbox" id="sexualHarassment"> セクハラ罪※セクハラされた場合チケット発行→クリップ提出→対応（1000万・60分）</label><br>
     <label><input type="checkbox" id="bribery"> 収賄罪※公務員のみ適応（3億・60分）</label><br>
     <label><input type="checkbox" id="businessObstruction"> 業務妨害罪※市民からの通報（ボディカメ必須）（500万・60分）
     </label><br>
@@ -111,8 +132,8 @@
 let selectedCrime = null;
 
 const crimeMappings = {
-  "家強盗": ["pettyRobbery","gunLaw","obstructionOfficialDuties"],
-  "ATM強盗": ["pettyRobbery","gunLaw","obstructionOfficialDuties"],
+  "家強盗": ["pettyRobbery","obstructionOfficialDuties"],
+  "ATM強盗": ["pettyRobbery","obstructionOfficialDuties"],
   "コンビニ強盗": ["pettyRobbery", "gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
   "フリーカ銀行強盗": ["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
   "宝石強盗": ["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
@@ -227,14 +248,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 詐欺罪用（50～100）
+  // 詐欺罪用（5～50）
   const fraudInput = document.getElementById("fraudCount");
-  fraudInput.setAttribute("min", 50);
-  fraudInput.setAttribute("max", 100);
+  fraudInput.setAttribute("min", 5);
+  fraudInput.setAttribute("max", 50);
   fraudInput.addEventListener("input", () => {
-    const val = parseInt(fraudInput.value) || 50;
-    if (val < 50) fraudInput.value = 50;
-    if (val > 100) fraudInput.value = 100;
+    const val = parseInt(fraudInput.value) || 5;
+    if (val < 5) fraudInput.value = 5;
+    if (val > 50) fraudInput.value = 50;
   });
 
   // 薬物チェック時の数値初期化
@@ -280,10 +301,10 @@ document.getElementById("fraud").addEventListener("change", function () {
 
   if (this.checked) {
     container.style.display = "block";
-    input.value = 50; // ✅ チェックを入れたときに5にリセット
+    input.value = 5; // ✅ チェックを入れたときに5にリセット
   } else {
     container.style.display = "none";
-    input.value = 50; // ✅ チェックを外したときにも5にリセット（既存仕様）
+    input.value = 5; // ✅ チェックを外したときにも5にリセット（既存仕様）
   }
 });
 
@@ -325,7 +346,7 @@ function calculateFine() {
     selectedCharges.push("軽強盗罪");
   }
   if (document.getElementById("fraud").checked) {
-    const amount = parseInt(document.getElementById("fraudCount").value) || 50;
+    const amount = parseInt(document.getElementById("fraudCount").value) || 5;
     fine += amount * 10000;
     if (isManual) time += 10;
     selectedCharges.push(`詐欺罪（${amount}万）`);
@@ -362,7 +383,7 @@ function calculateFine() {
     { id: "aidingEscape", fine: 2000000, time: 60, label: "逃走補助罪" },
     { id: "facilityAttack", fine: 8000000, time: 60, label: "公共施設襲撃罪" },
     { id: "eventTerrorism", fine: 100000000, time: 60, label: "イベントテロ罪" },
-    { id: "sexualHarassment", fine: 100000000, time: 60, label: "セクハラ罪" },
+    { id: "sexualHarassment", fine: 10000000, time: 60, label: "セクハラ罪" },
     { id: "bribery", fine: 300000000, time: 60, label: "収賄罪" },
     { id: "businessObstruction", fine: 5000000, time: 60, label: "業務妨害罪" },
   ];
@@ -412,7 +433,5 @@ function calculateFine() {
     `<strong>選択された罪状:</strong><br>` +
     selectedCharges.map(c => `・${c}`).join("<br>");
 }
-
-
 
 </script>
