@@ -1,6 +1,5 @@
 <!--追加・変更項目
-・セクハラ罪1億円から1000万円に変更　☑
-・詐欺罪50～100万が5～50万に変更　□
+・詐欺罪50～100万が50万に固定　□
 ・家、ATM強盗から銃刀法違反削除 □
 ・タイトルの左に「※プレイヤー殺人罪は大型からチェック済み」と追加-->
 <html lang="ja">
@@ -72,11 +71,7 @@
     <label><input type="checkbox" id="theft"> 軽窃盗罪（30万・10分）</label><br>
     <label><input type="checkbox" id="pettyRobberyAttempt"> 軽強盗未遂（15万・なし）</label><br>
     <label><input type="checkbox" id="pettyRobbery"> 軽強盗罪（30万・なし）</label><br>
-    <label><input type="checkbox" id="fraud"> 詐欺罪（5～50万・10分）</label><br>
-    <div id="fraudCountContainer" class="input-box" style="display: none;">
-      詐欺罰金額※5～50万まで:
-      <input type="number" id="fraudCount" value="50" min="50" max="100" step="1">
-    </div>
+    <label><input type="checkbox" id="fraud"> 詐欺罪（50万・10分）</label><br>
     <label><input type="checkbox" id="obstructionOfficialDuties"> 公務執行妨害※逃亡・職務質問放棄含む（10万・10分）</label><br>
     <label><input type="checkbox" id="assault"> 暴行罪（20万・10分）</label><br>
     <label><input type="checkbox" id="noId"> ID・ライセンス不携帯（10万・なし）</label><br>
@@ -100,7 +95,7 @@
     <label><input type="checkbox" id="aidingEscape"> 逃走補助罪（200万・60分）</label><br>
     <label><input type="checkbox" id="facilityAttack"> 公共施設襲撃罪（800万・60分）</label><br>
     <label><input type="checkbox" id="eventTerrorism"> イベントテロ罪（1億・60分）</label><br>
-    <label><input type="checkbox" id="sexualHarassment"> セクハラ罪※セクハラされた場合チケット発行→クリップ提出→対応（1000万・60分）</label><br>
+    <label><input type="checkbox" id="sexualHarassment"> セクハラ罪※セクハラされた場合チケット発行→クリップ提出→対応（1億円・60分）</label><br>
     <label><input type="checkbox" id="bribery"> 収賄罪※公務員のみ適応（3億・60分）</label><br>
     <label><input type="checkbox" id="businessObstruction"> 業務妨害罪※市民からの通報（ボディカメ必須）（500万・60分）
     </label><br>
@@ -188,7 +183,6 @@ function selectCrime(crime, btn) {
   // 薬物数量入力欄の表示をリセット
 document.getElementById("rawDrugCount").style.display = "none";
 document.getElementById("drugCount").style.display = "none";
-document.getElementById("fraudCountContainer").style.display = "none";
 
   if (crimeMappings[crime]) {
     crimeMappings[crime].forEach(id => {
@@ -248,16 +242,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 詐欺罪用（5～50）
-  const fraudInput = document.getElementById("fraudCount");
-  fraudInput.setAttribute("min", 5);
-  fraudInput.setAttribute("max", 50);
-  fraudInput.addEventListener("input", () => {
-    const val = parseInt(fraudInput.value) || 5;
-    if (val < 5) fraudInput.value = 5;
-    if (val > 50) fraudInput.value = 50;
-  });
-
   // 薬物チェック時の数値初期化
   document.getElementById("illegalRawDrug").addEventListener("change", function () {
     if (!this.checked) document.getElementById("rawDrugCount").value = 0;
@@ -289,24 +273,11 @@ function showAllCharges(button) {
   // 数量入力欄の表示もリセット
   document.getElementById("rawDrugCount").style.display = "none";
   document.getElementById("drugCount").style.display = "none";
-  document.getElementById("fraudCountContainer").style.display = "none";
 
   optionsDiv.style.display = "block";
   updateBailAvailability();
 }
 
-document.getElementById("fraud").addEventListener("change", function () {
-  const container = document.getElementById("fraudCountContainer");
-  const input = document.getElementById("fraudCount");
-
-  if (this.checked) {
-    container.style.display = "block";
-    input.value = 5; // ✅ チェックを入れたときに5にリセット
-  } else {
-    container.style.display = "none";
-    input.value = 5; // ✅ チェックを外したときにも5にリセット（既存仕様）
-  }
-});
 
 function toggleInput(id) {
   const input = document.getElementById(id);
@@ -346,10 +317,9 @@ function calculateFine() {
     selectedCharges.push("軽強盗罪");
   }
   if (document.getElementById("fraud").checked) {
-    const amount = parseInt(document.getElementById("fraudCount").value) || 5;
-    fine += amount * 10000;
-    if (isManual) time += 10;
-    selectedCharges.push(`詐欺罪（${amount}万）`);
+    fine += 500000;
+    time += 10;
+    selectedCharges.push("詐欺罪");
   }
   if (document.getElementById("obstructionOfficialDuties").checked) {
     fine += 100000;
@@ -383,7 +353,7 @@ function calculateFine() {
     { id: "aidingEscape", fine: 2000000, time: 60, label: "逃走補助罪" },
     { id: "facilityAttack", fine: 8000000, time: 60, label: "公共施設襲撃罪" },
     { id: "eventTerrorism", fine: 100000000, time: 60, label: "イベントテロ罪" },
-    { id: "sexualHarassment", fine: 10000000, time: 60, label: "セクハラ罪" },
+    { id: "sexualHarassment", fine: 100000000, time: 60, label: "セクハラ罪" },
     { id: "bribery", fine: 300000000, time: 60, label: "収賄罪" },
     { id: "businessObstruction", fine: 5000000, time: 60, label: "業務妨害罪" },
   ];
