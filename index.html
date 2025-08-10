@@ -1,6 +1,5 @@
 <!--追加・変更項目
-・公共施設襲撃罪が800万から5000万に増加
-・警察署襲撃が追加-->
+・個人医追加-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -54,6 +53,7 @@
 <button onclick="selectCrime('アーティファクト強盗', this)">アーティファクト強盗</button>
 <button onclick="selectCrime('パシフィック銀行強盗', this)">パシフィック銀行強盗</button>
 <button onclick="selectCrime('ファストヘイスト', this)">ファストヘイスト</button>
+<button onclick="selectCrime('個人医', this)">個人医</button>
 <button onclick="showAllCharges(this)">その他</button>
 
 <div id="options" style="display: none;">
@@ -139,7 +139,8 @@ const crimeMappings = {
   "飛行場襲撃": ["firstDegreeRobbery", "gunLaw","npcMurder","obstructionOfficialDuties","playerMurder"],
   "アーティファクト強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
   "パシフィック銀行強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
-  "ファストヘイスト": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"]
+  "ファストヘイスト": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
+  "個人医":["aidingEscape","obstructionOfficialDuties"],
 };
 
 //刑期時間固定場所
@@ -157,6 +158,7 @@ const fixedTimeByCrime = {
   "アーティファクト強盗": 60,
   "パシフィック銀行強盗": 60,
   "ファストヘイスト": 60,
+  "個人医": 60,
 };
 
 function selectCrime(crime, btn) {
