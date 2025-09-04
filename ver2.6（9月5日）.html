@@ -1,6 +1,8 @@
 <!--追加・変更項目
-・プレイヤー殺人罪が50万から150万増加
-・殺人未遂が30万から100万に増加-->
+・重強盗罪が200万から600万に増加
+・重強盗未遂が100万から300万に増加
+・最重強盗罪が400万から100万に増加
+・最重強盗未遂が200万から500万に増加-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -83,16 +85,16 @@
     <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両・窃盗車（スーパーカー）（100万・30分）</label><br>
     <label><input type="checkbox" id="aggravatedRobberyAttempt"> 準重強盗未遂（50万・なし）</label><br>
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
-    <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（100万・なし）</label><br>
-    <label><input type="checkbox" id="armedRobbery"> 重強盗罪（200万・なし）</label><br>
-    <label><input type="checkbox" id="firstDegreeRobberyAttempt"> 最重強盗未遂（200万・なし）</label><br>
-    <label><input type="checkbox" id="firstDegreeRobbery"> 最重強盗罪（400万・なし）</label><br>
+    <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（300万・なし）</label><br>
+    <label><input type="checkbox" id="armedRobbery"> 重強盗罪（600万・なし）</label><br>
+    <label><input type="checkbox" id="firstDegreeRobberyAttempt"> 最重強盗未遂（500万・なし）</label><br>
+    <label><input type="checkbox" id="firstDegreeRobbery"> 最重強盗罪（1000万・なし）</label><br>
     <label><input type="checkbox" id="kidnap"> 誘拐・拉致・監禁罪※人質含む（10万・10分）</label><br>
     <label><input type="checkbox" id="npcMurder"> NPC殺人罪（10万・10分）</label><br>
     <label><input type="checkbox" id="attemptedMurder"> 殺人未遂（100万・20分）</label><br>
     <label><input type="checkbox" id="playerMurder"> プレイヤー殺人罪（150万・30分）</label><br>
     <label><input type="checkbox" id="prisonEscape"> 脱獄罪（100万・60分）</label><br>
-    <label><input type="checkbox" id="aidingEscape"> 逃走補助罪（200万・60分）</label><br>
+    <label><input type="checkbox" id="aidingEscape"> 逃走補助罪（200万・30分）</label><br>
     <label><input type="checkbox" id="facilityAttack"> 公共施設襲撃罪※病院・飲食店・メカニックなど（5000万・60分）</label><br>
     <label><input type="checkbox" id="PoliceStationAssault"> 警察署襲撃罪（3000万・60分）</label><br>
     <label><input type="checkbox" id="eventTerrorism"> イベントテロ罪（1億・60分）</label><br>
@@ -159,7 +161,7 @@ const fixedTimeByCrime = {
   "アーティファクト強盗": 60,
   "パシフィック銀行強盗": 60,
   "ファストヘイスト": 60,
-  "個人医": 60,
+  "個人医": 30,
 };
 
 function selectCrime(crime, btn) {
@@ -344,16 +346,16 @@ function calculateFine() {
     { id: "aggravatedTheft", fine: 1000000, time: 30, label: "重窃盗罪" },
     { id: "aggravatedRobberyAttempt", fine: 500000, time: 0, label: "準重強盗未遂" },
     { id: "aggravatedRobbery", fine: 1000000, time: 0, label: "準重強盗罪" },
-    { id: "armedRobberyAttempt", fine: 1000000, time: 0, label: "重強盗未遂" },
-    { id: "armedRobbery", fine: 2000000, time: 0, label: "重強盗罪" },
-    { id: "firstDegreeRobberyAttempt", fine: 2000000, time: 0, label: "最重強盗未遂" },
-    { id: "firstDegreeRobbery", fine: 4000000, time: 0, label: "最重強盗罪" },
+    { id: "armedRobberyAttempt", fine: 3000000, time: 0, label: "重強盗未遂" },
+    { id: "armedRobbery", fine: 6000000, time: 0, label: "重強盗罪" },
+    { id: "firstDegreeRobberyAttempt", fine: 5000000, time: 0, label: "最重強盗未遂" },
+    { id: "firstDegreeRobbery", fine: 10000000, time: 0, label: "最重強盗罪" },
     { id: "kidnap", fine: 100000, time: 10, label: "誘拐・拉致・監禁罪" },
     { id: "npcMurder", fine: 100000, time: 10, label: "NPC殺人罪" },
     { id: "attemptedMurder", fine: 1000000, time: 20, label: "殺人未遂" },
     { id: "playerMurder", fine: 1500000, time: 30, label: "プレイヤー殺人罪" },
     { id: "prisonEscape", fine: 1000000, time: 60, label: "脱獄罪" },
-    { id: "aidingEscape", fine: 2000000, time: 60, label: "逃走補助罪" },
+    { id: "aidingEscape", fine: 2000000, time: 30, label: "逃走補助罪" },
     { id: "facilityAttack", fine: 50000000, time: 60, label: "公共施設襲撃罪" },
     { id: "PoliceStationAssault", fine: 30000000, time: 60, label: "本署襲撃罪" },
     { id: "eventTerrorism", fine: 100000000, time: 60, label: "イベントテロ罪" },
