@@ -1,6 +1,7 @@
 <!--追加・変更項目
 ・ユニオン銀行強盗追加
-・最重強盗罪の罰金額が1000万から1400万に増加-->
+・最重強盗罪の罰金額が1000万から1400万に増加
+・ブースティングA,S帯から重強盗罪を削除-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -50,7 +51,6 @@
 <button onclick="selectCrime('パレト銀行強盗', this)">パレト銀行強盗</button>
 <button onclick="selectCrime('客船強盗', this)">客船強盗</button>
 <button onclick="selectCrime('ボブキャット', this)">ボブキャット</button>
-<button onclick="selectCrime('ブースティングA,S帯', this)">ブースティングA,S帯</button>
 <button onclick="selectCrime('飛行場襲撃', this)">飛行場襲撃</button>
 <button onclick="selectCrime('アーティファクト強盗', this)">アーティファクト強盗</button>
 <button onclick="selectCrime('ユニオン銀行強盗', this)">ユニオン銀行強盗</button>
@@ -139,7 +139,6 @@ const crimeMappings = {
   "パレト銀行強盗": ["armedRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
   "客船強盗": ["armedRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
   "ボブキャット":["armedRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
-  "ブースティングA,S帯":["gunLaw", "obstructionOfficialDuties", "aggravatedTheft", "armedRobbery","playerMurder"],
   "飛行場襲撃": ["firstDegreeRobbery", "gunLaw","npcMurder","obstructionOfficialDuties","playerMurder"],
   "アーティファクト強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
   "ユニオン銀行強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
@@ -159,7 +158,6 @@ const fixedTimeByCrime = {
   "パレト銀行強盗": 40,
   "客船強盗":40,
   "ボブキャット":40,
-  "ブースティングA,S帯": 40,
   "飛行場襲撃": 60,
   "アーティファクト強盗": 60,
   "ユニオン銀行強盗": 60,
