@@ -1,5 +1,6 @@
 <!--追加・変更項目
-・ブースティングA,S帯追加-->
+・ユニオン銀行強盗追加
+・最重強盗罪の罰金額が1000万から1400万に増加-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -52,6 +53,7 @@
 <button onclick="selectCrime('ブースティングA,S帯', this)">ブースティングA,S帯</button>
 <button onclick="selectCrime('飛行場襲撃', this)">飛行場襲撃</button>
 <button onclick="selectCrime('アーティファクト強盗', this)">アーティファクト強盗</button>
+<button onclick="selectCrime('ユニオン銀行強盗', this)">ユニオン銀行強盗</button>
 <button onclick="selectCrime('パシフィック銀行強盗', this)">パシフィック銀行強盗</button>
 <button onclick="selectCrime('ファストヘイスト', this)">ファストヘイスト</button>
 <button onclick="selectCrime('個人医', this)">個人医</button>
@@ -86,7 +88,7 @@
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（300万・なし）</label><br>
     <label><input type="checkbox" id="armedRobbery"> 重強盗罪（600万・なし）</label><br>
     <label><input type="checkbox" id="firstDegreeRobberyAttempt"> 最重強盗未遂（500万・なし）</label><br>
-    <label><input type="checkbox" id="firstDegreeRobbery"> 最重強盗罪（1000万・なし）</label><br>
+    <label><input type="checkbox" id="firstDegreeRobbery"> 最重強盗罪（1400万・なし）</label><br>
     <label><input type="checkbox" id="kidnap"> 誘拐・拉致・監禁罪※人質含む（10万・10分）</label><br>
     <label><input type="checkbox" id="npcMurder"> NPC殺人罪（10万・10分）</label><br>
     <label><input type="checkbox" id="attemptedMurder"> 殺人未遂（100万・20分）</label><br>
@@ -140,6 +142,7 @@ const crimeMappings = {
   "ブースティングA,S帯":["gunLaw", "obstructionOfficialDuties", "aggravatedTheft", "armedRobbery","playerMurder"],
   "飛行場襲撃": ["firstDegreeRobbery", "gunLaw","npcMurder","obstructionOfficialDuties","playerMurder"],
   "アーティファクト強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
+  "ユニオン銀行強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
   "パシフィック銀行強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
   "ファストヘイスト": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
   "個人医":["aidingEscape","obstructionOfficialDuties"],
@@ -159,6 +162,7 @@ const fixedTimeByCrime = {
   "ブースティングA,S帯": 40,
   "飛行場襲撃": 60,
   "アーティファクト強盗": 60,
+  "ユニオン銀行強盗": 60,
   "パシフィック銀行強盗": 60,
   "ファストヘイスト": 60,
   "個人医": 30,
@@ -349,7 +353,7 @@ function calculateFine() {
     { id: "armedRobberyAttempt", fine: 3000000, time: 0, label: "重強盗未遂" },
     { id: "armedRobbery", fine: 6000000, time: 0, label: "重強盗罪" },
     { id: "firstDegreeRobberyAttempt", fine: 5000000, time: 0, label: "最重強盗未遂" },
-    { id: "firstDegreeRobbery", fine: 10000000, time: 0, label: "最重強盗罪" },
+    { id: "firstDegreeRobbery", fine: 14000000, time: 0, label: "最重強盗罪" },
     { id: "kidnap", fine: 100000, time: 10, label: "誘拐・拉致・監禁罪" },
     { id: "npcMurder", fine: 100000, time: 10, label: "NPC殺人罪" },
     { id: "attemptedMurder", fine: 1000000, time: 20, label: "殺人未遂" },
