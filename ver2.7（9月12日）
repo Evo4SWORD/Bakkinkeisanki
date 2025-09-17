@@ -1,6 +1,7 @@
 <!--追加・変更項目
 ・ユニオン銀行強盗追加
 ・最重強盗罪の罰金額が1000万から1400万に増加
+・最重強盗未遂の罰金額が500万から700万に増加
 ・ブースティングA,S帯から重強盗罪を削除-->
 <html lang="ja">
 <head>
@@ -87,7 +88,7 @@
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（300万・なし）</label><br>
     <label><input type="checkbox" id="armedRobbery"> 重強盗罪（600万・なし）</label><br>
-    <label><input type="checkbox" id="firstDegreeRobberyAttempt"> 最重強盗未遂（500万・なし）</label><br>
+    <label><input type="checkbox" id="firstDegreeRobberyAttempt"> 最重強盗未遂（700万・なし）</label><br>
     <label><input type="checkbox" id="firstDegreeRobbery"> 最重強盗罪（1400万・なし）</label><br>
     <label><input type="checkbox" id="kidnap"> 誘拐・拉致・監禁罪※人質含む（10万・10分）</label><br>
     <label><input type="checkbox" id="npcMurder"> NPC殺人罪（10万・10分）</label><br>
@@ -350,7 +351,7 @@ function calculateFine() {
     { id: "aggravatedRobbery", fine: 1000000, time: 0, label: "準重強盗罪" },
     { id: "armedRobberyAttempt", fine: 3000000, time: 0, label: "重強盗未遂" },
     { id: "armedRobbery", fine: 6000000, time: 0, label: "重強盗罪" },
-    { id: "firstDegreeRobberyAttempt", fine: 5000000, time: 0, label: "最重強盗未遂" },
+    { id: "firstDegreeRobberyAttempt", fine: 7000000, time: 0, label: "最重強盗未遂" },
     { id: "firstDegreeRobbery", fine: 14000000, time: 0, label: "最重強盗罪" },
     { id: "kidnap", fine: 100000, time: 10, label: "誘拐・拉致・監禁罪" },
     { id: "npcMurder", fine: 100000, time: 10, label: "NPC殺人罪" },
