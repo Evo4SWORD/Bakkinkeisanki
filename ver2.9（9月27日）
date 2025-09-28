@@ -1,8 +1,6 @@
 <!--追加・変更項目
-・ユニオン銀行強盗追加
-・最重強盗罪の罰金額が1000万から1400万に増加
-・最重強盗未遂の罰金額が500万から700万に増加
-・ブースティングA,S帯から重強盗罪を削除-->
+・違法物販売から違法物売買に名前を変更
+・重強盗罪が100万から300万に変更-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -83,7 +81,7 @@
   <!-- 重犯罪 -->
   <fieldset>
     <legend>重犯罪</legend>
-    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両・窃盗車（スーパーカー）（100万・30分）</label><br>
+    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両・窃盗車（スーパーカー）（300万・30分）</label><br>
     <label><input type="checkbox" id="aggravatedRobberyAttempt"> 準重強盗未遂（50万・なし）</label><br>
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（300万・なし）</label><br>
@@ -117,7 +115,7 @@
       <label><input type="checkbox" id="illegalDrugUnit" onchange="toggleInput('drugCount')"> 違法薬物所持（1個 2万・固定20分）※100個まで</label>
       <input type="number" id="drugCount" value="0" min="0" style="display:none;" max="100">
     </div>
-    <label><input type="checkbox" id="illegalDrugFlat"> 違法薬物販売（20万・20分）</label><br>
+    <label><input type="checkbox" id="illegalDrugFlat"> 違法薬物売買（20万・20分）</label><br>
   </fieldset>
 
   <button onclick="calculateFine()">計算する</button>
@@ -346,7 +344,7 @@ function calculateFine() {
 
   // 重犯罪
   const heavyCrimes = [
-    { id: "aggravatedTheft", fine: 1000000, time: 30, label: "重窃盗罪" },
+    { id: "aggravatedTheft", fine: 3000000, time: 30, label: "重窃盗罪" },
     { id: "aggravatedRobberyAttempt", fine: 500000, time: 0, label: "準重強盗未遂" },
     { id: "aggravatedRobbery", fine: 1000000, time: 0, label: "準重強盗罪" },
     { id: "armedRobberyAttempt", fine: 3000000, time: 0, label: "重強盗未遂" },
@@ -395,7 +393,7 @@ function calculateFine() {
   if (document.getElementById("illegalDrugFlat").checked) {
     fine += 200000;
     if (isManual) time += 20;
-    selectedCharges.push("違法薬物販売");
+    selectedCharges.push("違法薬物売買");
   }
 
   // 保釈金オプション
