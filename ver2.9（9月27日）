@@ -1,6 +1,7 @@
 <!--追加・変更項目
 ・違法物販売から違法物売買に名前を変更
-・重強盗罪が100万から300万に変更-->
+・重強盗罪が100万から300万に変更
+・重窃盗罪からスーパーカーが除外、公務員車両のみに変更-->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -81,7 +82,7 @@
   <!-- 重犯罪 -->
   <fieldset>
     <legend>重犯罪</legend>
-    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両・窃盗車（スーパーカー）（300万・30分）</label><br>
+    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪※公務員車両（300万・30分）</label><br>
     <label><input type="checkbox" id="aggravatedRobberyAttempt"> 準重強盗未遂（50万・なし）</label><br>
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（300万・なし）</label><br>
