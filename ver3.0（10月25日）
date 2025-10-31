@@ -168,16 +168,24 @@ function updateGlobalDrugTotals(){
   const total = participants.reduce((s,p) => s + (p.drugCount || 0), 0);
   const unitCb = document.getElementById('illegalDrugUnit');
   const unitCount = document.getElementById('illegalDrugUnit_count');
-  if(unitCb && unitCount){
+  if(!unitCb || !unitCount) return;
+
+  // 名前が存在する場合のみ、名前合計を反映（名前優先）
+  if(participants.length > 0){
     if(total > 0){
       unitCb.checked = true;
       unitCount.value = total;
       unitCount.style.display = 'inline-block';
     } else {
+      // 名前に薬数が無い場合はUIをリセット
       unitCb.checked = false;
-      unitCount.value = 0;
       unitCount.style.display = 'none';
     }
+  } else {
+    // 名前が無い場合はユーザー入力を保持（上書きしない）
+    // ここではチェックボックスの状態に応じて見た目だけ更新
+    unitCount.style.display = unitCb.checked ? 'inline-block' : 'none';
+    // unitCount.value は変更しない！！
   }
 }
 
@@ -209,12 +217,35 @@ function buildUI(){
       left.appendChild(checkbox);
       left.appendChild(label);
 
-      if(ch.hasCount){
-        const num = el('input',{type:'number',id: ch.id + '_count', value:0, min:0, max: ch.max || 999, class:'count-input', style:'display:none;margin-left:6px'});
-        checkbox.addEventListener('change',()=> num.style.display = checkbox.checked ? 'inline-block' : 'none');
-        left.appendChild(num);
-      }
+    if(ch.hasCount){
+  // drugグループ（違法薬物・原材料など）は1人あたり最大100まで
+  const maxVal = (ch.group === 'drug') ? 100 : (ch.max || 999);
+  const num = el('input',{
+    type:'number',
+    id: ch.id + '_count',
+    value:0,
+    min:0,
+    max: maxVal,
+    class:'count-input',
+    style:'display:none;margin-left:6px'
+  });
 
+  // チェックを入れたときだけ数値入力ボックスを表示
+  checkbox.addEventListener('change',()=> num.style.display = checkbox.checked ? 'inline-block' : 'none');
+
+  // 入力値を常に0〜maxValの範囲に収める（100超え防止）
+  num.addEventListener('input', (e) => {
+    let v = parseInt(e.target.value, 10);
+    if (Number.isNaN(v)) v = 0;
+    if (v < 0) v = 0;
+    if (v > maxVal) v = maxVal;
+    if (String(e.target.value) !== String(v)) {
+      e.target.value = v;
+    }
+  });
+
+  left.appendChild(num);
+}
       row.appendChild(left);
 
       const right = el('div',{class:'row-right'});
@@ -241,12 +272,27 @@ function renderParticipants(){
   participants.forEach(p=>{
     const row = el('div',{class:'person-row', 'data-id':p.id});
     const nameSpan = el('span',{class:'person-name'}, p.name);
+
     const drugLabel = el('label',{}, `（薬×`);
-    const drugInput = el('input',{type:'number',value:p.drugCount,min:0,max:999,style:'width:72px', id:`person_${p.id}_drug`});
+    const drugInput = el('input',{
+      type:'number',
+      value:p.drugCount,
+      min:0,
+      max:100, // 各人100個まで
+      style:'width:72px',
+      id:`person_${p.id}_drug`
+    });
+
     drugInput.addEventListener('change', (e)=> {
-      p.drugCount = parseInt(e.target.value,10) || 0;
+      let val = parseInt(e.target.value,10) || 0;
+      if (val > 100) {
+        val = 100;
+        e.target.value = 100;
+      }
+      p.drugCount = val;
       updateGlobalDrugTotals();
     });
+
     const drugClose = el('span',{}, '個）');
     const removeBtn = el('button',{class:'person-remove',type:'button'}, '削除');
     removeBtn.addEventListener('click', ()=> {
@@ -255,6 +301,7 @@ function renderParticipants(){
       renderParticipants();
       updateGlobalDrugTotals();
     });
+
     row.appendChild(nameSpan);
     row.appendChild(drugLabel);
     row.appendChild(drugInput);
@@ -266,7 +313,6 @@ function renderParticipants(){
   // 表示更新後に合計を生成オプションに反映
   updateGlobalDrugTotals();
 }
-
 /* 選択・表示制御 */
 let selectedCrime = null;
 function selectCrime(name, btn){
@@ -362,30 +408,40 @@ function calculateFine(){
   });
   const participantsDrugTotal = people.reduce((s,p)=> s + (p.drugCount||0), 0);
 
-  DATA.charges.forEach(ch=>{
-    const cb = document.getElementById(ch.id);
-    if(!cb || !cb.checked) return;
+ DATA.charges.forEach(ch=>{
+  const cb = document.getElementById(ch.id);
+  if(!cb || !cb.checked) return;
 
-    if(ch.hasCount){
-      const cnt = parseInt(document.getElementById(ch.id + '_count')?.value,10) || 0;
-      const add = (ch.finePerUnit || 0) * cnt;
-      totalBeforeBail += add;
-      breakdown[ch.group].fine += add;
-      breakdown[ch.group].time += ch.time || 0;
-      if(ch.group === 'drug') breakdown.drug.fine += add;
-      if(isManual) time += ch.time || 0;
-
-      // 薬の個数表示は集計表示にしたいので個別行は追加しない
-      // （illegalRawDrug/illegalDrugUnit はここで金額に寄与するが、表示は総数でまとめる）
-    } else {
-      const add = ch.fine || 0;
-      totalBeforeBail += add;
-      breakdown[ch.group].fine += add;
-      breakdown[ch.group].time += ch.time || 0;
-      if(isManual) time += ch.time || 0;
-      selected.push(ch.label);
+  if(ch.hasCount){
+    // 生成オプション（下の数値入力）からの薬分の加算は、
+    // 名前付き参加者が存在する場合は二重カウントになるためスキップする
+    if(ch.group === 'drug' && people.length > 0){
+      // 参加者側の drugCount を使って個別に課金するためここでは無視
+      // ただし、参加者がいない（匿名運用）なら下の数値を使って加算する
+      // （処理を抜けるだけ）
+      return;
     }
-  });
+
+    const cnt = parseInt(document.getElementById(ch.id + '_count')?.value,10) || 0;
+    const add = (ch.finePerUnit || 0) * cnt;
+    totalBeforeBail += add;
+    breakdown[ch.group].fine += add;
+    breakdown[ch.group].time += ch.time || 0;
+    if(ch.group === 'drug') breakdown.drug.fine += add;
+    if(isManual) time += ch.time || 0;
+
+    // 薬の個数表示は集計表示にしたいので個別行は追加しない
+  } else {
+    const add = ch.fine || 0;
+    totalBeforeBail += add;
+    breakdown[ch.group].fine += add;
+    breakdown[ch.group].time += ch.time || 0;
+    if(isManual) time += ch.time || 0;
+    selected.push(ch.label);
+  }
+});
+
+
 
   // 「違法薬物所持（〇個）※総数」を追加（総数が0なら表示しない）
   if(participantsDrugTotal > 0){
@@ -417,21 +473,17 @@ function calculateFine(){
     if(!selected.some(s=>s.startsWith('※保釈金適用中'))) selected.push("※保釈金適用中（罰金2倍）");
   }
 
-  // 各人の表示額（複数時は非薬物を均等分配＋個人の薬代）
-  let perPersonShare = 0;
-  if(people.length > 1) perPersonShare = Math.round(nonDrugBeforeBail / people.length);
-  const peopleHtml = people.length
-    ? people.map(p => {
-        const baseName = `${p.name}（薬×${p.drugCount || 0}）`;
-        if(people.length > 1){
-          const personDrugFine = (p.drugCount || 0) * drugUnitFinePer;
-          const personTotal = perPersonShare + personDrugFine;
-          return `${baseName}　${personTotal.toLocaleString()} 円`;
-        }
-        // 1人: 表示は従来どおり（トップに全て表示しているため個別表示は名前のみ）
-        return baseName;
-      }).join('<br>')
-    : '<span class="muted">なし</span>';
+  // 各人の表示額（全員に同じ総額を表示）
+const peopleHtml = people.length
+  ? people.map(p => {
+      const baseName = `${p.name}（薬×${p.drugCount || 0}）`;
+      // 全員に同じ額を表示（非薬物も薬もまとめた総額）
+      const personDrugFine = (p.drugCount || 0) * drugUnitFinePer;
+      const personTotal = totalBeforeBail + personDrugFine; // ←分割せず全体額
+      return `${baseName}　${personTotal.toLocaleString()} 円`;
+    }).join('<br>')
+  : '<span class="muted">なし</span>';
+
 
   const chargesHtml = selected.length ? selected.map(s=>`・${s}`).join('<br>') : '<span class="muted">なし</span>';
   const resultHtml =
