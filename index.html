@@ -448,53 +448,64 @@ function calculateFine(){
     selected.push(`違法薬物所持（${participantsDrugTotal}個）※総数`);
   }
 
-  // 非薬物部分（参加者薬は participantsDrugTotal を基に算出）
-  const drugUnitFinePer = 20000; // illegalDrugUnit の単価
-  const participantsDrugFine = participantsDrugTotal * drugUnitFinePer;
-  const nonDrugBeforeBail = Math.max(0, totalBeforeBail - participantsDrugFine);
+  /// --- 統合版（このブロックで drugUnitFinePer を一度だけ宣言） ---
+// 非薬物部分（参加者薬は participantsDrugTotal を基に算出）
+const drugUnitFinePer = 20000; // illegalDrugUnit の単価（ここで一度だけ宣言）
+const participantsDrugFine = participantsDrugTotal * drugUnitFinePer;
+const nonDrugBeforeBail = totalBeforeBail;
+// 保釈の倍率設定
+const bail = document.getElementById('bailOption');
+const bailMultiplier = (bail && bail.checked) ? 2 : 1;
 
-  // 保釈適用（トップの表示は単独時は薬含め、複数時は薬除外）
-  const bail = document.getElementById('bailOption');
-  let topDisplayFine = 0;
-  if(people.length <= 1){
-    // 単独：トップは全体（薬含む）
-    topDisplayFine = totalBeforeBail;
-    if(bail && bail.checked) topDisplayFine = Math.round(topDisplayFine * 2);
-  } else {
-    // 複数：トップは非薬物部分（薬は各人横に表示）
-    topDisplayFine = nonDrugBeforeBail;
-    if(bail && bail.checked) topDisplayFine = Math.round(topDisplayFine * 2);
-  }
+// 合計刑期（保釈時は0）
+if (bail && bail.checked) {
+  time = 0;
+  if (!selected.some(s => s.startsWith('※保釈金適用中'))) selected.push("※保釈金適用中（罰金2倍）");
+}
 
-  // 追加：保釈が適用されている場合は刑期を0にする
-  if(bail && bail.checked){
-    time = 0;
-    // selected に保釈表記を追加（重複防止）
-    if(!selected.some(s=>s.startsWith('※保釈金適用中'))) selected.push("※保釈金適用中（罰金2倍）");
-  }
 
-  // 各人の表示額（全員に同じ総額を表示）
-const peopleHtml = people.length
-  ? people.map(p => {
-      const baseName = `${p.name}（薬×${p.drugCount || 0}）`;
-      // 全員に同じ額を表示（非薬物も薬もまとめた総額）
-      const personDrugFine = (p.drugCount || 0) * drugUnitFinePer;
-      const personTotal = totalBeforeBail + personDrugFine; // ←分割せず全体額
-      return `${baseName}　${personTotal.toLocaleString()} 円`;
-    }).join('<br>')
+// --- 合計計算 ---
+let totalFineAll = 0;
+if (people.length === 1) {
+  // 単独：薬も含む全部
+  totalFineAll = totalBeforeBail * bailMultiplier;
+} else {
+  // 複数人：非薬物 + 各人の薬物分
+  const allDrugFine = people.reduce((sum, p) => sum + (p.drugCount || 0) * drugUnitFinePer, 0);
+  totalFineAll = (nonDrugBeforeBail + allDrugFine) * bailMultiplier;
+}
+
+// --- 各人の金額計算 ---
+let peopleHtml = '';
+if (people.length === 1) {
+  peopleHtml = `${people[0].name}（薬×${people[0].drugCount || 0}）`;
+} else {
+  // 🔽 修正：人数で割らずにそのまま非薬物罰金を使う
+  const perPersonBase = Math.round(nonDrugBeforeBail);
+  peopleHtml = people.map(p => {
+    const baseName = `${p.name}（薬×${p.drugCount || 0}）`;
+    const personDrugFine = (p.drugCount || 0) * drugUnitFinePer;
+    const personTotal = Math.round((perPersonBase + personDrugFine) * bailMultiplier);
+    return `${baseName}　${personTotal.toLocaleString()} 円`;
+  }).join('<br>');
+}
+
+// --- 表示 ---
+const chargesHtml = selected.length
+  ? selected.map(s => `・${s}`).join('<br>')
   : '<span class="muted">なし</span>';
 
+const resultHtml =
+  `<div><strong>合計罰金:</strong> ${totalFineAll.toLocaleString()} 円</div>` +
+  `<div><strong>合計刑期:</strong> ${time} 分</div>` +
+  `<div style="margin-top:8px"><strong>罪状:</strong><br>${chargesHtml}</div>` +
+  `<div style="margin-top:8px"><strong>対象者:</strong><br>${peopleHtml}</div>`;
 
-  const chargesHtml = selected.length ? selected.map(s=>`・${s}`).join('<br>') : '<span class="muted">なし</span>';
-  const resultHtml =
-    `<div><strong>合計罰金:</strong> ${topDisplayFine.toLocaleString()} 円</div>` +
-    `<div><strong>合計刑期:</strong> ${time} 分</div>` +
-    `<div style="margin-top:8px"><strong>罪状:</strong><br>${chargesHtml}</div>` +
-    `<div style="margin-top:8px"><strong>対象者:</strong><br>${peopleHtml}</div>`;
+const tools = `<div style="margin-top:8px"><button id="copyResult" class="small">名前＋罪状をコピー</button></div>`;
+const resEl = document.getElementById('result');
+if (resEl) resEl.innerHTML = resultHtml + tools;
 
-  const tools = `<div style="margin-top:8px"><button id="copyResult" class="small">名前＋罪状をコピー</button></div>`;
-  const resEl = document.getElementById('result');
-  if(resEl) resEl.innerHTML = resultHtml + tools;
+
 
   const copyBtn = document.getElementById('copyResult');
   if (copyBtn) {
