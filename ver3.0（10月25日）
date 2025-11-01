@@ -467,20 +467,20 @@ if (bail && bail.checked) {
 // --- 合計計算 ---
 let totalFineAll = 0;
 if (people.length === 1) {
-  // 単独：薬も含む全部
+  // ✅ 1人：薬を含める
   totalFineAll = totalBeforeBail * bailMultiplier;
 } else {
-  // 複数人：非薬物 + 各人の薬物分
-  const allDrugFine = people.reduce((sum, p) => sum + (p.drugCount || 0) * drugUnitFinePer, 0);
-  totalFineAll = (nonDrugBeforeBail + allDrugFine) * bailMultiplier;
+  // ✅ 複数人：薬を除外（非薬物のみ）
+  totalFineAll = nonDrugBeforeBail * bailMultiplier;
 }
 
 // --- 各人の金額計算 ---
 let peopleHtml = '';
 if (people.length === 1) {
+  // 1人の場合は名前だけ表示（合計に薬含むのでここでは個別金額表示しない）
   peopleHtml = `${people[0].name}（薬×${people[0].drugCount || 0}）`;
 } else {
-  // 🔽 修正：人数で割らずにそのまま非薬物罰金を使う
+  // 複数人：人数で割らずに全員に同じ非薬物罰金を加算し、薬は個別で追加
   const perPersonBase = Math.round(nonDrugBeforeBail);
   peopleHtml = people.map(p => {
     const baseName = `${p.name}（薬×${p.drugCount || 0}）`;
@@ -584,3 +584,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
+
