@@ -1,5 +1,5 @@
 <!--修正済み
-・しかし、上部の薬所持の数を入力して削除しても下部の入力ボックスは消えないから、現状リセットボタンを押すか数字を消すかになってる-->
+・街ワイプ後の罰金額変更に対応。-->
 
 <!doctype html>
 <html lang="ja">
@@ -424,7 +424,7 @@ function calculateFine(){
   }
 
   // --- 薬関係（単価はここで一度だけ） ---
-  const drugUnitFinePer = 20000; // illegalDrugUnit の単価
+  const drugUnitFinePer = 50000; // illegalDrugUnit の単価
   const participantsDrugFine = participantsDrugTotal * drugUnitFinePer;
 
   // 非薬物部分（合計に含めるベース）
