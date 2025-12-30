@@ -1,7 +1,6 @@
 <!--修正済み
-・街ワイプ後の罰金額変更に対応。
-・違法薬物採取罪を削除
-・軍事物資に軽窃盗罪追加-->
+・以前の罰金額に戻った。
+・軍事物資にプレイヤー殺人、軽窃盗が最初から追加されている-->
 
 <!doctype html>
 <html lang="ja">
@@ -94,38 +93,39 @@ const DATA = {
     "パシフィック銀行強盗":60,"ファストヘイスト":60,"個人医":30
   },
   charges: [
-    { id:"gunLaw", label:"銃刀法違反", fine:200000, time:10, group:"petty" },
+    { id:"gunLaw", label:"銃刀法違反", fine:100000, time:10, group:"petty" },
     { id:"theft", label:"軽窃盗罪", fine:300000, time:10, group:"petty" },
-    { id:"pettyRobbery", label:"軽強盗罪", fine:500000, time:0, group:"petty" },
-    { id:"pettyRobberyAttempt", label:"軽強盗未遂", fine:250000, time:0, group:"petty" },
+    { id:"pettyRobberyAttempt", label:"軽強盗未遂", fine:150000, time:0, group:"petty" },
+    { id:"pettyRobbery", label:"軽強盗罪", fine:300000, time:0, group:"petty" },
     { id:"fraud", label:"詐欺罪", fine:500000, time:10, group:"petty" },
-    { id:"obstructionOfficialDuties", label:"公務執行妨害", fine:200000, time:10, group:"petty" },
-    { id:"assault", label:"暴行罪", fine:500000, time:10, group:"petty" },
+    { id:"obstructionOfficialDuties", label:"公務執行妨害", fine:100000, time:10, group:"petty" },
+    { id:"assault", label:"暴行罪", fine:200000, time:10, group:"petty" },
     { id:"noId", label:"ID・ライセンス不携帯", fine:100000, time:0, group:"petty" },
 
-    { id:"aggravatedTheft", label:"重窃盗罪（公務員車両）", fine:5000000, time:30, group:"heavy" },
-    { id:"aggravatedRobberyAttempt", label:"準重強盗未遂", fine:1700000, time:0, group:"heavy" },
-    { id:"aggravatedRobbery", label:"準重強盗罪", fine:3400000, time:0, group:"heavy" },
-    { id:"armedRobberyAttempt", label:"重強盗未遂", fine:6000000, time:0, group:"heavy" },
-    { id:"armedRobbery", label:"重強盗罪", fine:12000000, time:0, group:"heavy" },
-    { id:"firstDegreeRobberyAttempt", label:"最重強盗未遂", fine:10500000, time:0, group:"heavy" },
-    { id:"firstDegreeRobbery", label:"最重強盗罪", fine:21000000, time:0, group:"heavy" },
-    { id:"kidnap", label:"誘拐・拉致・監禁罪", fine:300000, time:10, group:"heavy" },
-    { id:"npcMurder", label:"NPC殺人罪", fine:200000, time:20, group:"heavy" },
-    { id:"attemptedMurder", label:"殺人未遂", fine:1000000, time:30, group:"heavy" },
-    { id:"playerMurder", label:"プレイヤー殺人罪", fine:2000000, time:60, group:"heavy" },
-    { id:"prisonEscape", label:"脱獄罪", fine:3000000, time:30, group:"heavy" },
-    { id:"aidingEscape", label:"逃走補助罪", fine:3000000, time:60, group:"heavy" },
-    { id:"facilityAttack", label:"公共施設襲撃罪", fine:60000000, time:60, group:"heavy" },
-    { id:"PoliceStationAssault", label:"警察署襲撃罪", fine:40000000, time:60, group:"heavy" },
+    { id:"aggravatedTheft", label:"重窃盗罪（公務員車両）", fine:3000000, time:30, group:"heavy" },
+    { id:"aggravatedRobberyAttempt", label:"準重強盗未遂", fine:500000, time:0, group:"heavy" },
+    { id:"aggravatedRobbery", label:"準重強盗罪", fine:1000000, time:0, group:"heavy" },
+    { id:"armedRobberyAttempt", label:"重強盗未遂", fine:3000000, time:0, group:"heavy" },
+    { id:"armedRobbery", label:"重強盗罪", fine:6000000, time:0, group:"heavy" },
+    { id:"firstDegreeRobberyAttempt", label:"最重強盗未遂", fine:7000000, time:0, group:"heavy" },
+    { id:"firstDegreeRobbery", label:"最重強盗罪", fine:14000000, time:0, group:"heavy" },
+    { id:"kidnap", label:"誘拐・拉致・監禁罪", fine:100000, time:10, group:"heavy" },
+    { id:"npcMurder", label:"NPC殺人罪", fine:100000, time:10, group:"heavy" },
+    { id:"attemptedMurder", label:"殺人未遂", fine:1000000, time:20, group:"heavy" },
+    { id:"playerMurder", label:"プレイヤー殺人罪", fine:1500000, time:30, group:"heavy" },
+    { id:"prisonEscape", label:"脱獄罪", fine:1000000, time:60, group:"heavy" },
+    { id:"aidingEscape", label:"逃走補助罪", fine:2000000, time:30, group:"heavy" },
+    { id:"facilityAttack", label:"公共施設襲撃罪", fine:50000000, time:60, group:"heavy" },
+    { id:"PoliceStationAssault", label:"警察署襲撃罪", fine:30000000, time:60, group:"heavy" },
     { id:"eventTerrorism", label:"イベントテロ罪", fine:100000000, time:60, group:"heavy" },
-    { id:"sexualHarassment", label:"セクハラ罪", fine:200000000, time:60, group:"heavy" },
-    { id:"bribery", label:"収賄罪", fine:200000000, time:60, group:"heavy" },
-    { id:"businessObstruction", label:"業務妨害罪", fine:50000000, time:60, group:"heavy" },
+    { id:"sexualHarassment", label:"セクハラ罪", fine:100000000, time:60, group:"heavy" },
+    { id:"bribery", label:"収賄罪", fine:300000000, time:60, group:"heavy" },
+    { id:"businessObstruction", label:"業務妨害罪", fine:5000000, time:60, group:"heavy" },
 
-    { id:"illegalRawDrug", label:"違法薬物原材料所持（1個 2万）", finePerUnit:20000, time:20, group:"drug", hasCount:true, max:999 },
-    { id:"illegalDrugUnit", label:"違法薬物所持（1個 5万）", finePerUnit:50000, time:20, group:"drug", hasCount:true, max:999 },
-    { id:"illegalDrugFlat", label:"違法薬物売買", fine:1500000, time:20, group:"drug" }
+    { id:"illegalDrugHarvesting", label:"違法薬物採取", fine:500000, time:10, group:"drug" },
+    { id:"illegalRawDrug", label:"違法薬物原材料所持（1個 1万）", finePerUnit:10000, time:20, group:"drug", hasCount:true, max:999 },
+    { id:"illegalDrugUnit", label:"違法薬物所持（1個 2万）", finePerUnit:20000, time:20, group:"drug", hasCount:true, max:999 },
+    { id:"illegalDrugFlat", label:"違法薬物売買", fine:200000, time:20, group:"drug" }
   ],
   crimeMappings: {
     "家強盗":["pettyRobbery","obstructionOfficialDuties"],
@@ -133,7 +133,7 @@ const DATA = {
     "コンビニ強盗":["pettyRobbery","gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
     "フリーカ銀行強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
     "宝石強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
-    "軍事物資強盗":["aggravatedRobbery","gunLaw","theft","obstructionOfficialDuties","npcMurder"],
+    "軍事物資強盗":["aggravatedRobbery","gunLaw","theft","obstructionOfficialDuties","npcMurder","playerMurder",],
     "パレト銀行強盗":["armedRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
     "客船強盗":["armedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
     "ボブキャット":["armedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
@@ -425,7 +425,7 @@ function calculateFine(){
   }
 
   // --- 薬関係（単価はここで一度だけ） ---
-  const drugUnitFinePer = 50000; // illegalDrugUnit の単価
+  const drugUnitFinePer = 20000; // illegalDrugUnit の単価
   const participantsDrugFine = participantsDrugTotal * drugUnitFinePer;
 
   // 非薬物部分（合計に含めるベース）
