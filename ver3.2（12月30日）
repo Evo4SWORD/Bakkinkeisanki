@@ -1,6 +1,6 @@
 <!--修正済み
 ・以前の罰金額に戻った。
-・軍事物資にプレイヤー殺人、軽窃盗が最初から追加されている-->
+・軍事物資にプレイヤー殺人が最初から追加されている-->
 
 <!doctype html>
 <html lang="ja">
@@ -133,7 +133,7 @@ const DATA = {
     "コンビニ強盗":["pettyRobbery","gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
     "フリーカ銀行強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
     "宝石強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
-    "軍事物資強盗":["aggravatedRobbery","gunLaw","theft","obstructionOfficialDuties","npcMurder","playerMurder",],
+    "軍事物資強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder",],
     "パレト銀行強盗":["armedRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
     "客船強盗":["armedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
     "ボブキャット":["armedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
