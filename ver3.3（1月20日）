@@ -1,6 +1,5 @@
 <!--修正済み
-・以前の罰金額に戻った。
-・軍事物資にプレイヤー殺人が最初から追加されている-->
+・個人医用インパウンド代100万ボタンを追加-->
 
 <!doctype html>
 <html lang="ja">
@@ -125,7 +124,9 @@ const DATA = {
     { id:"illegalDrugHarvesting", label:"違法薬物採取", fine:500000, time:10, group:"drug" },
     { id:"illegalRawDrug", label:"違法薬物原材料所持（1個 1万）", finePerUnit:10000, time:20, group:"drug", hasCount:true, max:999 },
     { id:"illegalDrugUnit", label:"違法薬物所持（1個 2万）", finePerUnit:20000, time:20, group:"drug", hasCount:true, max:999 },
-    { id:"illegalDrugFlat", label:"違法薬物売買", fine:200000, time:20, group:"drug" }
+    { id:"illegalDrugFlat", label:"違法薬物売買", fine:200000, time:20, group:"drug" },
+
+    {id: "personalMedicalImpound", label: "個人医車両インパウンド代", fine: 1000000, time: 0, group: "special", noBail: true }
   ],
   crimeMappings: {
     "家強盗":["pettyRobbery","obstructionOfficialDuties"],
@@ -142,7 +143,7 @@ const DATA = {
     "ユニオン銀行強盗":["firstDegreeRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
     "パシフィック銀行強盗":["firstDegreeRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
     "ファストヘイスト":["firstDegreeRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
-    "個人医":["aidingEscape","obstructionOfficialDuties"]
+    "個人医":["aidingEscape","obstructionOfficialDuties","personalMedicalImpound"]
   }
 };
 
@@ -183,71 +184,107 @@ function updateGlobalDrugTotals(){
 }
 
 /* UI の生成 */
-function buildUI(){
+function buildUI() {
+  // ===== 犯罪ボタン生成 =====
   const btnContainer = document.getElementById('crimeButtons');
   btnContainer.innerHTML = '';
-  DATA.crimes.forEach(name=>{
-    const b = el('button',{class:'crime-btn',type:'button'});
+
+  DATA.crimes.forEach(name => {
+    const b = el('button', {
+      class: 'crime-btn',
+      type: 'button'
+    });
+
     b.textContent = name;
-    b.addEventListener('click',()=> selectCrime(name,b));
+    b.addEventListener('click', () => selectCrime(name, b));
     btnContainer.appendChild(b);
   });
 
+  // ===== 罪状オプション生成 =====
   const gen = document.getElementById('generatedOptions');
-  if(!gen) return;
+  if (!gen) return;
   gen.innerHTML = '';
 
-  const groups = {petty:[], heavy:[], drug:[]};
-  DATA.charges.forEach(ch=> groups[ch.group||'petty'].push(ch));
+  const groups = { petty: [], heavy: [], drug: [], special: [] };
+  DATA.charges.forEach(ch => groups[ch.group || 'petty'].push(ch));
 
-  Object.entries(groups).forEach(([groupName, list])=>{
-    const fs = el('fieldset',{}, el('legend',{}, groupName === 'petty' ? '軽犯罪' : groupName === 'heavy' ? '重犯罪' : '薬'));
-    list.forEach(ch=>{
-      const row = el('div',{class:'row'});
-      const checkbox = el('input',{type:'checkbox',id:ch.id});
-      const label = el('label',{'for':ch.id}, `${ch.label}` );
-      const left = el('div',{class:'row-left'});
+  Object.entries(groups).forEach(([groupName, list]) => {
+    const fs = el(
+      'fieldset',
+      {},
+      el(
+        'legend',
+        {},
+        groupName === 'petty'
+          ? '軽犯罪'
+          : groupName === 'heavy'
+          ? '重犯罪'
+          : groupName === 'drug'
+          ? '薬'
+          : '特殊'
+      )
+    );
+
+    list.forEach(ch => {
+      const row = el('div', { class: 'row' });
+
+      const checkbox = el('input', { type: 'checkbox', id: ch.id });
+      const label = el('label', { for: ch.id }, ch.label);
+      const left = el('div', { class: 'row-left' });
       left.appendChild(checkbox);
       left.appendChild(label);
 
-      if(ch.hasCount){
-        const maxVal = (ch.group === 'drug') ? 100 : (ch.max || 999);
-        const num = el('input',{
-          type:'number',
+      if (ch.hasCount) {
+        const maxVal = ch.group === 'drug' ? 100 : ch.max || 999;
+        const num = el('input', {
+          type: 'number',
           id: ch.id + '_count',
-          value:0,
-          min:0,
+          value: 0,
+          min: 0,
           max: maxVal,
-          class:'count-input',
-          style:'display:none;margin-left:6px'
+          class: 'count-input',
+          style: 'display:none;margin-left:6px'
         });
-        checkbox.addEventListener('change',()=> num.style.display = checkbox.checked ? 'inline-block' : 'none');
-        num.addEventListener('input', (e) => {
+
+        checkbox.addEventListener(
+          'change',
+          () => (num.style.display = checkbox.checked ? 'inline-block' : 'none')
+        );
+
+        num.addEventListener('input', e => {
           let v = parseInt(e.target.value, 10);
           if (Number.isNaN(v)) v = 0;
           if (v < 0) v = 0;
           if (v > maxVal) v = maxVal;
-          if (String(e.target.value) !== String(v)) e.target.value = v;
+          e.target.value = v;
         });
+
         left.appendChild(num);
       }
+
       row.appendChild(left);
 
-      const right = el('div',{class:'row-right'});
-      const amountText = ch.hasCount ? (ch.finePerUnit || 0) : (ch.fine || 0);
-      const amount = el('span',{class:'meta'}, '');
-      const amtSpan = el('span',{class:'amount'}, amountText.toLocaleString() + ' 円');
-      const timeSpan = el('span',{class:'time'}, (ch.time || 0) + ' 分');
-      amount.appendChild(amtSpan);
-      amount.appendChild(timeSpan);
+      const right = el('div', { class: 'row-right' });
+      const amountText = ch.hasCount ? ch.finePerUnit || 0 : ch.fine || 0;
+
+      const amount = el('span', { class: 'meta' });
+      amount.appendChild(
+        el('span', { class: 'amount' }, amountText.toLocaleString() + ' 円')
+      );
+      amount.appendChild(
+        el('span', { class: 'time' }, (ch.time || 0) + ' 分')
+      );
+
       right.appendChild(amount);
       row.appendChild(right);
 
       fs.appendChild(row);
     });
+
     gen.appendChild(fs);
   });
 }
+
 
 /* participants UI helpers */
 function renderParticipants(){
@@ -303,6 +340,10 @@ let selectedCrime = null;
 function selectCrime(name, btn){
   const optionsDiv = document.getElementById('options');
   const allButtons = document.querySelectorAll('.crime-btn');
+
+  const impound = document.getElementById('personalMedicalImpound');
+  const impoundRow = impound?.closest('.row');
+
   if(selectedCrime === name && optionsDiv.style.display === 'block'){
     optionsDiv.style.display = 'none';
     document.getElementById('result').innerText = '';
@@ -310,14 +351,17 @@ function selectCrime(name, btn){
     selectedCrime = null;
     return;
   }
+
   selectedCrime = name;
   allButtons.forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('result').innerText = '';
   optionsDiv.style.display = 'block';
 
-  document.querySelectorAll('#generatedOptions input[type=checkbox]').forEach(cb=>cb.checked=false);
-  document.querySelectorAll('#generatedOptions input[type=number]').forEach(n=>{ n.value=0; n.style.display='none'; });
+  document.querySelectorAll('#generatedOptions input[type=checkbox]')
+    .forEach(cb=>cb.checked=false);
+  document.querySelectorAll('#generatedOptions input[type=number]')
+    .forEach(n=>{ n.value=0; n.style.display='none'; });
 
   const map = DATA.crimeMappings[name];
   if(map){
@@ -328,8 +372,21 @@ function selectCrime(name, btn){
       if(c) c.style.display = elm && elm.checked ? 'inline-block' : 'none';
     });
   }
+
+
+  if (impoundRow) {
+    if (name === '個人医') {
+      impoundRow.style.display = '';
+    } else {
+      impoundRow.style.display = 'none';
+      impound.checked = false;
+    }
+  }
+
   updateBailAvailability();
 }
+
+
 
 /* 保釈判定 */
 function updateBailAvailability(){
@@ -374,9 +431,10 @@ function calculateFine(){
 
   // --- 基本集計（薬はまだ totalBeforeBail に含めない） ---
   let totalBeforeBail = 0;
+  let noBailFine = 0;
   let time = 0;
   const selected = [];
-  const breakdown = {petty: {fine:0, time:0}, heavy:{fine:0,time:0}, drug:{fine:0,time:0}};
+  const breakdown = {petty: {fine:0, time:0}, heavy:{fine:0,time:0}, drug:{fine:0,time:0}, special:{fine:0,time:0}};
 
   const isManual = selectedCrime === 'その他';
   if(!isManual && DATA.fixedTimeByCrime[selectedCrime]) time = DATA.fixedTimeByCrime[selectedCrime];
@@ -395,28 +453,37 @@ function calculateFine(){
   // charges を集計（薬は人ベースならここではカウントしない）
   DATA.charges.forEach(ch=>{
     const cb = document.getElementById(ch.id);
-    if(!cb || !cb.checked) return;
+    if (!cb || !cb.checked) return;
 
-    if(ch.hasCount){
-      // 名前が存在する場合は個人側の drugCount を優先するのでここでの数値カウントをスキップ
-      if(ch.group === 'drug' && people.length > 0){
-        return;
-      }
-      const cnt = parseInt(document.getElementById(ch.id + '_count')?.value,10) || 0;
-      const add = (ch.finePerUnit || 0) * cnt;
-      totalBeforeBail += add;
-      breakdown[ch.group].fine += add;
-      breakdown[ch.group].time += ch.time || 0;
-      if(ch.group === 'drug') breakdown.drug.fine += add;
-      if(isManual) time += ch.time || 0;
-    } else {
-      const add = ch.fine || 0;
-      totalBeforeBail += add;
-      breakdown[ch.group].fine += add;
-      breakdown[ch.group].time += ch.time || 0;
-      if(isManual) time += ch.time || 0;
-      selected.push(ch.label);
-    }
+// nobail の罪状は別枠で加算
+if (ch.noBail) {
+  noBailFine += ch.fine || 0;
+  selected.push(ch.label);
+  return;
+}
+
+if (ch.hasCount) {
+  // 名前が存在する場合は個人側の drugCount を優先するのでここでの数値カウントをスキップ
+  if (ch.group === 'drug' && people.length > 0) {
+    return;
+  }
+  const cnt =
+    parseInt(document.getElementById(ch.id + '_count')?.value, 10) || 0;
+  const add = (ch.finePerUnit || 0) * cnt;
+  totalBeforeBail += add;
+  breakdown[ch.group].fine += add;
+  breakdown[ch.group].time += ch.time || 0;
+  if (ch.group === 'drug') breakdown.drug.fine += add;
+  if (isManual) time += ch.time || 0;
+} else {
+  const add = ch.fine || 0;
+  totalBeforeBail += add;
+  breakdown[ch.group].fine += add;
+  breakdown[ch.group].time += ch.time || 0;
+  if (isManual) time += ch.time || 0;
+  selected.push(ch.label);
+}
+
   });
 
   // 違法薬物所持の総数表示（UI用）
@@ -434,6 +501,7 @@ function calculateFine(){
   // 保釈処理（罰金倍率と刑期の扱い）
   const bailEl = document.getElementById('bailOption');
   const bailMultiplier = (bailEl && bailEl.checked) ? 2 : 1;
+  // 保釈非対象の罰金（個人医車両インパウンド代など）
   if (bailEl && bailEl.checked) {
     time = 0;
     if (!selected.some(s => s.startsWith('※保釈金適用中'))) {
@@ -445,14 +513,22 @@ function calculateFine(){
   // 単独（1名）: 合計にその人の薬代を含める
   // 複数人: 合計は非薬物のみ（薬は個別表示）
   let totalFineAll = 0;
-  if (people.length === 1) {
-    // 単独：非薬物 + その人の薬代
-    const singleDrugFine = (people[0].drugCount || 0) * drugUnitFinePer;
-    totalFineAll = Math.round((nonDrugBeforeBail + singleDrugFine) * bailMultiplier);
-  } else {
-    // 複数人：合計は非薬物だけ（薬は個別）
-    totalFineAll = Math.round(nonDrugBeforeBail * bailMultiplier);
-  }
+ if (people.length === 1) {
+  // 単独：非薬物 + その人の薬代 → 保釈倍率 → nobail加算
+  const singleDrugFine =
+    (people[0].drugCount || 0) * drugUnitFinePer;
+  totalFineAll =
+    Math.round(
+      (nonDrugBeforeBail + singleDrugFine) * bailMultiplier
+    ) +
+    noBailFine;
+} else {
+  // 複数人：非薬物のみ → 保釈倍率 → nobail加算
+  totalFineAll =
+    Math.round(nonDrugBeforeBail * bailMultiplier) +
+    noBailFine;
+}
+
 
   // --- 各人の表示（複数人時は非薬物を人数で割らず表示／合算しない設計） ---
   let peopleHtml = '';
