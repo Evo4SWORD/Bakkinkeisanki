@@ -1,5 +1,5 @@
 <!--修正済み
-・個人医用インパウンド代100万ボタンを追加-->
+・小型犯罪であるアジト強盗を追加-->
 
 <!doctype html>
 <html lang="ja">
@@ -81,12 +81,12 @@
 /* --- データ定義（省略せずそのまま） --- */
 const DATA = {
   crimes: [
-    "家強盗","ATM強盗","コンビニ強盗","フリーカ銀行強盗","宝石強盗","軍事物資強盗",
+    "家強盗","ATM強盗","コンビニ強盗","アジト強盗","フリーカ銀行強盗","宝石強盗","軍事物資強盗",
     "パレト銀行強盗","客船強盗","ボブキャット","飛行場襲撃","アーティファクト強盗",
     "ユニオン銀行強盗","パシフィック銀行強盗","ファストヘイスト","個人医","その他"
   ],
   fixedTimeByCrime: {
-    "家強盗":20,"ATM強盗":20,"コンビニ強盗":20,"フリーカ銀行強盗":30,"宝石強盗":30,
+    "家強盗":20,"ATM強盗":20,"コンビニ強盗":20,"アジト強盗":20,"フリーカ銀行強盗":30,"宝石強盗":30,
     "軍事物資強盗":30,"パレト銀行強盗":40,"客船強盗":40,"ボブキャット":40,
     "飛行場襲撃":60,"アーティファクト強盗":60,"ユニオン銀行強盗":60,
     "パシフィック銀行強盗":60,"ファストヘイスト":60,"個人医":30
@@ -132,6 +132,7 @@ const DATA = {
     "家強盗":["pettyRobbery","obstructionOfficialDuties"],
     "ATM強盗":["pettyRobbery","obstructionOfficialDuties"],
     "コンビニ強盗":["pettyRobbery","gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
+    "アジト強盗":["pettyRobbery","gunLaw","theft","obstructionOfficialDuties","kidnap","npcMurder"],
     "フリーカ銀行強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
     "宝石強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
     "軍事物資強盗":["aggravatedRobbery","gunLaw","obstructionOfficialDuties","npcMurder","playerMurder",],
